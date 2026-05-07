@@ -1,0 +1,48 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - persistentvolumeclaims
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hermes.nousresearch.com
+  resources:
+  - hermesagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hermes.nousresearch.com
+  resources:
+  - hermesagents/status
+  verbs:
+  - get
+  - patch
+  - update

@@ -1,0 +1,12 @@
+namespace: hermes-operator-system
+
+resources:
+- namespace.yaml
+- ../crd
+- ../rbac
+- ../manager
+
+images:
+- name: controller
+  newName: controller
+  newTag: latest

@@ -1,0 +1,32 @@
+apiVersion: hermes.nousresearch.com/v1alpha1
+kind: HermesAgent
+metadata:
+  name: coder
+spec:
+  image: ghcr.io/your-org/hermes-agent:latest
+  persistence:
+    size: 10Gi
+    retainOnDelete: true
+  config:
+    model:
+      provider: openai
+      default: gpt-4.1
+  envFromSecrets:
+  - name: coder-hermes-secrets
+  dashboard:
+    enabled: true
+    tui: false
+    port: 9119
+  apiServer:
+    enabled: true
+    port: 8642
+    keySecretRef:
+      name: coder-hermes-secrets
+      key: API_SERVER_KEY
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi

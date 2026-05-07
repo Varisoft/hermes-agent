@@ -1,0 +1,16 @@
+domain: nousresearch.com
+layout:
+- go.kubebuilder.io/v4
+projectName: hermes-operator
+repo: github.com/nousresearch/hermes-agent/operators/hermes-operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: nousresearch.com
+  group: hermes
+  kind: HermesAgent
+  path: github.com/nousresearch/hermes-agent/operators/hermes-operator/api/v1alpha1
+  version: v1alpha1
+version: "3"

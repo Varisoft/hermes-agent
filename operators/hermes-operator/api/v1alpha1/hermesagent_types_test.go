@@ -12,6 +12,9 @@ func TestDefaultsRetainPVC(t *testing.T) {
 	agent := &HermesAgent{}
 	agent.Default()
 
+	if agent.Spec.Image != DefaultHermesImage {
+		t.Fatalf("image = %q, want %q", agent.Spec.Image, DefaultHermesImage)
+	}
 	if agent.Spec.Persistence.Size == nil {
 		t.Fatal("expected default storage size")
 	}
@@ -29,16 +32,15 @@ func TestDefaultsRetainPVC(t *testing.T) {
 	}
 }
 
-func TestValidateSpecRequiresImage(t *testing.T) {
+func TestValidateSpecDefaultsImage(t *testing.T) {
 	agent := &HermesAgent{}
 	agent.Default()
 
-	errs := agent.ValidateSpec()
-	if len(errs) == 0 {
-		t.Fatal("expected missing image validation error")
+	if agent.Spec.Image != DefaultHermesImage {
+		t.Fatalf("image = %q, want %q", agent.Spec.Image, DefaultHermesImage)
 	}
-	if !strings.Contains(errs.ToAggregate().Error(), "spec.image") {
-		t.Fatalf("expected spec.image error, got %v", errs.ToAggregate())
+	if errs := agent.ValidateSpec(); len(errs) > 0 {
+		t.Fatalf("unexpected validation errors: %v", errs.ToAggregate())
 	}
 }
 

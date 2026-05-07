@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	DefaultHermesImage   = "nousresearch/hermes-agent:0.12.0"
 	DefaultStorageSize   = "10Gi"
 	DefaultDashboardPort = int32(9119)
 	DefaultAPIServerPort = int32(8642)
@@ -20,9 +21,10 @@ const (
 // HermesAgentSpec defines the desired state of HermesAgent.
 type HermesAgentSpec struct {
 	// Image is the Hermes container image to run.
-	// +kubebuilder:validation:Required
+	// +optional
+	// +kubebuilder:default:="nousresearch/hermes-agent:0.12.0"
 	// +kubebuilder:validation:MinLength=1
-	Image string `json:"image"`
+	Image string `json:"image,omitempty"`
 
 	// ImagePullPolicy controls when Kubernetes pulls the Hermes image.
 	// +kubebuilder:validation:Enum=Always;Never;IfNotPresent
@@ -179,6 +181,9 @@ func init() {
 }
 
 func (in *HermesAgent) Default() {
+	if strings.TrimSpace(in.Spec.Image) == "" {
+		in.Spec.Image = DefaultHermesImage
+	}
 	if in.Spec.Persistence.Size == nil {
 		q := resource.MustParse(DefaultStorageSize)
 		in.Spec.Persistence.Size = &q
@@ -198,10 +203,6 @@ func (in *HermesAgent) Default() {
 func (in *HermesAgent) ValidateSpec() field.ErrorList {
 	var allErrs field.ErrorList
 	specPath := field.NewPath("spec")
-
-	if strings.TrimSpace(in.Spec.Image) == "" {
-		allErrs = append(allErrs, field.Required(specPath.Child("image"), "image is required"))
-	}
 
 	if in.Spec.Dashboard.Port < 0 || in.Spec.Dashboard.Port > 65535 {
 		allErrs = append(allErrs, field.Invalid(specPath.Child("dashboard", "port"), in.Spec.Dashboard.Port, "must be between 1 and 65535"))

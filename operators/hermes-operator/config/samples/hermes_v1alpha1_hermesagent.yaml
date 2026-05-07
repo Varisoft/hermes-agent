@@ -3,7 +3,6 @@ kind: HermesAgent
 metadata:
   name: coder
 spec:
-  image: ghcr.io/your-org/hermes-agent:latest
   persistence:
     size: 10Gi
     retainOnDelete: true
